@@ -1417,3 +1417,21 @@ a.contact-line:hover strong { color: var(--lagoon-2); }
   font-size: var(--t-sm);
 }
 .btn:disabled { opacity: 0.6; cursor: progress; }
+
+/* Home hero: let the sunset photograph breathe — lighter veil up top, text low over the water */
+.hero--home .hero-media img { object-position: 50% 45%; }
+.hero--home::after {
+  background:
+    linear-gradient(to top, rgba(10, 14, 13, 0.78) 0%, rgba(10, 14, 13, 0.32) 38%, rgba(10, 14, 13, 0) 68%),
+    linear-gradient(to right, rgba(10, 14, 13, 0.38), rgba(10, 14, 13, 0) 55%);
+}
+.hero--home .hero-content { padding-bottom: clamp(2.5rem, 5vw, 4.5rem); }
+.hero--home .hero-content { text-shadow: 0 2px 18px rgba(8, 12, 11, 0.55); }
+@media (max-width: 900px) {
+  /* Portrait screens crop the sides; favour the yacht and the palms */
+  .hero--home .hero-media img { object-position: 24% 50%; }
+}
+@media (max-width: 520px) {
+  /* Phones: one call to action keeps the headline clear of the yacht; the consultation button lives in the menu */
+  .hero--home .hero-actions .btn--ghost-light { display: none; }
+}

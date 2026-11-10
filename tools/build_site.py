@@ -18,7 +18,7 @@ OUT = os.path.join(ROOT, "Site")
 
 SITE = "https://www.mahalosecurity.com"
 TODAY = datetime.date.today().isoformat()
-ASSET_VERSION = "12"  # bump when styles.css or main.js change so browsers fetch the new files
+ASSET_VERSION = "14"  # bump when styles.css or main.js change so browsers fetch the new files
 
 PHONE_DISPLAY = "727-400-6259"
 PHONE_TEL = "+17274006259"
@@ -33,7 +33,8 @@ OPERATOR = "Dumbarton Security Services LLC"
 LICENSE = "Florida Class B Security Agency License B1900383"
 LICENSE_NO = "B1900383"
 TAGLINE = "Some choose a lifestyle. Others protect it."
-HERO_IMAGE = "assets/images/mahalo-estate-sunset.jpg"
+HERO_IMAGE = "assets/images/mahalo-estate-sunset-v2.webp"
+SHARE_IMAGE = "assets/images/mahalo-estate-sunset-share.jpg"  # 1200x630 JPG for link previews
 
 
 def unsplash(pid, w=2000):
@@ -257,7 +258,7 @@ def org_schema():
         "slogan": TAGLINE,
         "description": "MAHALO provides private lifestyle protection for affluent individuals and families, executives, estate owners and luxury hospitality clients: private estate and family protection, executive protection, luxury hospitality protection, yacht and private aviation travel security, and private event and VIP protection.",
         "url": SITE + "/",
-        "image": f"{SITE}/{HERO_IMAGE}",
+        "image": f"{SITE}/{SHARE_IMAGE}",
         "telephone": "+1-727-400-6259",
         "email": EMAIL,
         "knowsAbout": [
@@ -331,7 +332,7 @@ def faq_schema():
 # ---------------------------------------------------------------- shared chrome
 def head(fname, title, description, schemas=(), image=None, noindex=False, preload=None):
     full_title = title if "MAHALO" in title else f"{title} | MAHALO"
-    og_image = image or f"{SITE}/{HERO_IMAGE}"
+    og_image = image or f"{SITE}/{SHARE_IMAGE}"
     robots = "noindex, follow" if noindex else "index, follow, max-image-preview:large, max-snippet:-1"
     ld = "".join(
         f'\n<script type="application/ld+json">{json.dumps(s, ensure_ascii=False)}</script>' for s in schemas
@@ -487,14 +488,13 @@ def faq_html():
 # ================================================================ HOME
 tiles = "\n      ".join(experience_tile(s) for s in SERVICES)
 home = f"""<main id="main">
-<section class="hero">
-  <div class="hero-media"><img src="{HERO_IMAGE}" alt="A waterfront estate at sunset, its terraces and palms reflected in the water" fetchpriority="high"></div>
+<section class="hero hero--home">
+  <div class="hero-media"><img src="{HERO_IMAGE}" alt="A waterfront estate at sunset, its lit terraces and palms reflected in the water beside a yacht at its private dock" fetchpriority="high"></div>
   <div class="wrap hero-content">
     <div>
       <h1 class="rise hero-tagline">Some choose a lifestyle. <span class="tagline-2">Others protect it.</span></h1>
       <p class="hero-sub rise rise-2">Private Lifestyle Protection</p>
-      <p class="lede rise rise-3">Discreet, hospitality-minded protection for the people, places and moments that matter most.</p>
-      <div class="hero-actions rise rise-4">
+      <div class="hero-actions rise rise-3">
         <a class="btn btn--brass" href="#experience">Explore the MAHALO Experience <span class="arrow" aria-hidden="true">→</span></a>
         <a class="btn btn--ghost-light" href="consultation.html">Request a Private Consultation</a>
       </div>
@@ -895,7 +895,7 @@ page("consultation.html", "Request a Private Consultation | MAHALO",
 # ================================================================ CONTACT
 contact = f"""<main id="main">
 <section class="hero hero--page">
-  <div class="hero-media"><img src="{HERO_IMAGE}" alt="A waterfront estate at sunset reflected in calm water" fetchpriority="high"></div>
+  <div class="hero-media"><img src="{HERO_IMAGE}" alt="A waterfront estate and its docked yacht at sunset, reflected in calm water" fetchpriority="high"></div>
   <div class="wrap hero-content">
     <div>
       <span class="eyebrow rise">Contact</span>
