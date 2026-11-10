@@ -36,6 +36,13 @@ build downloads any missing sizes into `Site/assets/images` and, on a Mac,
 compresses them. Review the privacy policy whenever forms, hosting or tracking
 change.
 
+## Deployment
+
+Netlify deploys automatically from the `main` branch on GitHub. `netlify.toml`
+tells it to publish the `Site/` folder as-is (no build step), and sets caching
+and security headers. Rebuild locally with `python3 tools/build_site.py` and
+commit the generated pages; pushing to `main` publishes them.
+
 ## Preview locally
 
 ```bash

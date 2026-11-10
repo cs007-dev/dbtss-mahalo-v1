@@ -1,0 +1,33 @@
+# Netlify settings for the MAHALO website.
+# The pages are generated locally by tools/build_site.py and committed, so
+# Netlify publishes the Site/ folder as-is without running a build.
+
+[build]
+  publish = "Site"
+  command = ""
+
+# Security headers for every page
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# CSS and JS change URL (?v=) whenever they change, so browsers may keep them a year
+[[headers]]
+  for = "/assets/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Photographs rarely change; cache for 30 days
+[[headers]]
+  for = "/assets/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
