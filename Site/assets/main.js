@@ -47,7 +47,27 @@
     items.forEach(function (el) { el.classList.add("is-in"); });
   }
 
-  // Forms: no backend yet — validate, then show the confirmation state
+  // Forms: the site has no server, so each form opens the visitor's email app
+  // with a message to MAHALO already written from the fields they filled in.
+  var MAHALO_EMAIL = "info@mahalosecurity.com";
+
+  function composeEmail(form) {
+    var lines = [];
+    form.querySelectorAll("[name]").forEach(function (field) {
+      if (field.type === "checkbox" && !field.checked) return;
+      var value = (field.value || "").trim();
+      if (!value) return;
+      var label = field.getAttribute("data-label") || field.name;
+      lines.push(label + ": " + value);
+    });
+    var subject = form.getAttribute("data-subject") || "MAHALO inquiry";
+    var name = form.querySelector("[name='name']");
+    if (name && name.value.trim()) subject += " — " + name.value.trim();
+    return "mailto:" + MAHALO_EMAIL +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(lines.join("\n") + "\n");
+  }
+
   document.querySelectorAll("form[data-mahalo-form]").forEach(function (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -55,6 +75,7 @@
         form.reportValidity();
         return;
       }
+      window.location.href = composeEmail(form);
       var success = document.getElementById(form.getAttribute("data-success"));
       form.hidden = true;
       if (success) {
@@ -63,6 +84,13 @@
       }
     });
   });
+
+  // Arriving from a service page (consultation.html?service=estate) pre-selects that service
+  try {
+    var service = new URLSearchParams(window.location.search).get("service");
+    var chip = service && document.getElementById("int-" + service.replace(/[^a-z]/g, ""));
+    if (chip) chip.checked = true;
+  } catch (err) { /* older browsers: nothing to pre-select */ }
 
   var year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();

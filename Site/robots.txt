@@ -1,0 +1,20 @@
+# MAHALO: welcome to search engines and AI search assistants
+User-agent: *
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: Google-Extended
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: GPTBot
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: DuckAssistBot
+Allow: /
+Disallow: /brand/
+
+Sitemap: https://www.mahalosecurity.com/sitemap.xml

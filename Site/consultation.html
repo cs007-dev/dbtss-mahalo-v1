@@ -3,20 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Secure Consultation</title>
-<meta name="description" content="Request a confidential consultation with Mahalo.">
+<title>Request a Private Consultation | MAHALO</title>
+<meta name="description" content="Request a confidential consultation about estate, executive, hospitality, travel or event protection. Call 727-400-6259 or email info@mahalosecurity.com.">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<link rel="canonical" href="https://www.mahalosecurity.com/consultation.html">
+<meta name="theme-color" content="#121816">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MAHALO Private Lifestyle Protection">
+<meta property="og:title" content="Request a Private Consultation | MAHALO">
+<meta property="og:description" content="Request a confidential consultation about estate, executive, hospitality, travel or event protection. Call 727-400-6259 or email info@mahalosecurity.com.">
+<meta property="og:url" content="https://www.mahalosecurity.com/consultation.html">
+<meta property="og:image" content="https://www.mahalosecurity.com/assets/images/mahalo-estate-sunset.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Request a Private Consultation | MAHALO">
+<meta name="twitter:description" content="Request a confidential consultation about estate, executive, hospitality, travel or event protection. Call 727-400-6259 or email info@mahalosecurity.com.">
+<meta name="twitter:image" content="https://www.mahalosecurity.com/assets/images/mahalo-estate-sunset.jpg">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Jost:wght@300..600&display=swap">
-<link rel="stylesheet" href="assets/styles.css?v=5">
+<link rel="stylesheet" href="assets/styles.css?v=11">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.mahalosecurity.com/"}, {"@type": "ListItem", "position": 2, "name": "Private Consultation", "item": "https://www.mahalosecurity.com/consultation.html"}]}</script>
 </head>
 <body class="">
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="wrap header-inner">
-    <!-- LOGO PLACEHOLDER — replace the .brand contents with the Mahalo logo (SVG recommended) -->
-    <a class="brand" href="index.html" aria-label="Mahalo home">
-      <span class="brand-mark" aria-hidden="true">M</span>
+    <a class="brand" href="index.html" aria-label="MAHALO, Private Lifestyle Protection, home">
+      <!-- Brand wordmark. Replace with the final MAHALO logo artwork when approved. -->
       <span class="brand-word"><strong>MAHALO</strong><small>Private Lifestyle Protection</small></span>
     </a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu"><span></span><span></span></button>
@@ -28,7 +42,7 @@
       </ul>
       <div class="nav-ctas">
         <a class="nav-contact" href="contact.html">Contact</a>
-        <a class="btn" href="consultation.html">Request a Secure Consultation</a>
+        <a class="btn" href="consultation.html">Request a Private Consultation</a>
       </div>
     </nav>
   </div>
@@ -37,74 +51,62 @@
 <section class="section">
   <div class="wrap form-layout">
     <div class="form-aside">
-      <span class="eyebrow">Secure consultation</span>
-      <h2>Tell us a little. <em>We’ll take it from there.</em></h2>
-      <p class="lede">Share only what you’re comfortable with. A senior member of our team will reach out personally — typically within one business day — to arrange a confidential conversation.</p>
+      <span class="eyebrow">Private consultation</span>
+      <h1 style="font-size:var(--t-2xl);margin-block:1.25rem 1.5rem">Tell us a little. <em>We’ll take it from there.</em></h1>
+      <p class="lede">Share only what you are comfortable with. A member of the MAHALO team will reach out personally to arrange a confidential conversation.</p>
       <dl>
-        <div><dt>Private line</dt><dd>+1 (000) 000-0000</dd></div>
-        <div><dt>Secure email</dt><dd>concierge@mahalo.example</dd></div>
-        <div><dt>Availability</dt><dd>Around the clock, every day of the year</dd></div>
+        <div><dt>Private line</dt><dd><a href="tel:+17274006259">727-400-6259</a></dd></div>
+        <div><dt>Email</dt><dd><a href="mailto:info@mahalosecurity.com">info@mahalosecurity.com</a></dd></div>
       </dl>
-      <p class="note">Requests are handled only by senior staff and are never shared. We are happy to sign a mutual NDA before any detailed discussion.</p>
+      <p class="note">Your request is held in strict confidence and shared only with the MAHALO team.</p>
     </div>
 
     <div class="form">
-      <form id="consult-form" data-mahalo-form data-success="consult-success" novalidate>
+      <form id="consult-form" data-mahalo-form data-success="consult-success" data-subject="Private consultation request" novalidate>
         <div class="form-grid">
-          <div class="field"><label for="c-name">Full name</label><input id="c-name" name="name" autocomplete="name" required></div>
-          <div class="field"><label for="c-org">Organization <span class="optional">(optional)</span></label><input id="c-org" name="organization" autocomplete="organization"></div>
-          <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
-          <div class="field"><label for="c-phone">Phone <span class="optional">(optional)</span></label><input id="c-phone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="c-name">Full name</label><input id="c-name" name="name" data-label="Name" autocomplete="name" required></div>
+          <div class="field"><label for="c-org">Organization <span class="optional">(optional)</span></label><input id="c-org" name="organization" data-label="Organization" autocomplete="organization"></div>
+          <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" data-label="Email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="c-phone">Phone <span class="optional">(optional)</span></label><input id="c-phone" name="phone" data-label="Phone" type="tel" autocomplete="tel"></div>
           <div class="field"><label for="c-for">Consultation is for</label>
-            <select id="c-for" name="for" required>
+            <select id="c-for" name="for" data-label="Consultation is for" required>
               <option value="">Select one</option>
               <option>Myself</option>
-              <option>An executive or principal I represent</option>
               <option>My family</option>
-              <option>A family office</option>
-              <option>An event or meeting</option>
+              <option>An executive or principal I represent</option>
+              <option>An estate or residence</option>
+              <option>A hotel, resort, club or community</option>
+              <option>An event or gathering</option>
             </select>
           </div>
           <div class="field"><label for="c-contact">Preferred contact</label>
-            <select id="c-contact" name="contact">
+            <select id="c-contact" name="contact" data-label="Preferred contact">
               <option>Phone call</option>
               <option>Email</option>
-              <option>Secure video</option>
               <option>In-person meeting</option>
             </select>
           </div>
           <fieldset class="field field--full">
             <legend>Areas of interest <span class="optional">(select any)</span></legend>
             <div class="chips">
-            <label class="chip"><input type="checkbox" name="interest" id="int-0" value="Executive protection"><span>Executive protection</span></label>
-            <label class="chip"><input type="checkbox" name="interest" id="int-1" value="Aviation &amp; travel"><span>Aviation &amp; travel</span></label>
-            <label class="chip"><input type="checkbox" name="interest" id="int-2" value="Yacht &amp; maritime"><span>Yacht &amp; maritime</span></label>
-            <label class="chip"><input type="checkbox" name="interest" id="int-3" value="Residences &amp; estates"><span>Residences &amp; estates</span></label>
-            <label class="chip"><input type="checkbox" name="interest" id="int-4" value="Family protection"><span>Family protection</span></label>
-            <label class="chip"><input type="checkbox" name="interest" id="int-5" value="Private events"><span>Private events</span></label>
-            <label class="chip"><input type="checkbox" name="interest" id="int-6" value="Advisory &amp; intelligence"><span>Advisory &amp; intelligence</span></label>
+            <label class="chip"><input type="checkbox" name="interest" id="int-estate" value="The Private Estate" data-label="Interest"><span>The Private Estate</span></label>
+            <label class="chip"><input type="checkbox" name="interest" id="int-executive" value="The Executive Life" data-label="Interest"><span>The Executive Life</span></label>
+            <label class="chip"><input type="checkbox" name="interest" id="int-hospitality" value="The World of Hospitality" data-label="Interest"><span>The World of Hospitality</span></label>
+            <label class="chip"><input type="checkbox" name="interest" id="int-journey" value="The Private Journey" data-label="Interest"><span>The Private Journey</span></label>
+            <label class="chip"><input type="checkbox" name="interest" id="int-entertaining" value="The Art of Entertaining" data-label="Interest"><span>The Art of Entertaining</span></label>
             </div>
           </fieldset>
-          <div class="field"><label for="c-timing">Timing</label>
-            <select id="c-timing" name="timing">
-              <option>Exploring options</option>
-              <option>Within the next month</option>
-              <option>Within the next week</option>
-              <option>Immediate need</option>
-            </select>
-          </div>
-          <div class="field"><label for="c-region">Primary region <span class="optional">(optional)</span></label><input id="c-region" name="region" placeholder="e.g. New York, Monaco, Maui"></div>
-          <div class="field field--full"><label for="c-msg">Anything you’d like us to know <span class="optional">(optional)</span></label><textarea id="c-msg" name="message" placeholder="Upcoming travel, events or concerns — as much or as little as you like."></textarea></div>
+          <div class="field field--full"><label for="c-msg">Anything you’d like us to know <span class="optional">(optional)</span></label><textarea id="c-msg" name="message" data-label="Message" placeholder="Residences, upcoming travel or occasions, as much or as little as you like."></textarea></div>
         </div>
         <div class="form-foot">
-          <small>By submitting, you agree to be contacted by Mahalo. Your information is held in strict confidence.</small>
-          <button class="btn" type="submit">Request Consultation <span class="arrow" aria-hidden="true">→</span></button>
+          <small>Submitting opens your email app with your request addressed to info@mahalosecurity.com, ready to send.</small>
+          <button class="btn" type="submit">Prepare My Request <span class="arrow" aria-hidden="true">→</span></button>
         </div>
       </form>
       <div class="form-success" id="consult-success" tabindex="-1" hidden>
-        <span class="eyebrow">Mahalo</span>
-        <h3 style="margin-top:1.25rem">Thank you. <em>Your request is received.</em></h3>
-        <p>A senior member of our team will contact you personally, using your preferred method, to arrange a confidential conversation.</p>
+        <span class="eyebrow">MAHALO</span>
+        <h2 style="margin-top:1.25rem;font-size:var(--t-2xl)">Thank you. <em>One last step.</em></h2>
+        <p>Your email app should now be open with your request addressed to info@mahalosecurity.com. Please press send to deliver it. If it did not open, email <a href="mailto:info@mahalosecurity.com">info@mahalosecurity.com</a> or call <a href="tel:+17274006259">727-400-6259</a>.</p>
       </div>
     </div>
   </div>
@@ -114,11 +116,12 @@
   <div class="wrap">
     <div class="footer-top">
       <div class="footer-brand">
-        <a class="brand" href="index.html" aria-label="Mahalo home">
-          <span class="brand-mark" aria-hidden="true">M</span>
-          <span class="brand-word"><strong>MAHALO</strong><small>Private Lifestyle Protection</small></span>
-        </a>
-        <p class="footer-tagline">Environments where extraordinary people work, travel, invest and live without distraction.</p>
+        <a class="brand" href="index.html" aria-label="MAHALO, Private Lifestyle Protection, home">
+      <!-- Brand wordmark. Replace with the final MAHALO logo artwork when approved. -->
+      <span class="brand-word"><strong>MAHALO</strong><small>Private Lifestyle Protection</small></span>
+    </a>
+        <p class="footer-tagline">Some choose a lifestyle. Others protect it.</p>
+        <p class="footer-statement">Timeless elegance · Discreet protection · Peace of mind</p>
       </div>
       <div class="footer-col">
         <h4>Explore</h4>
@@ -127,33 +130,34 @@
           <li><a href="about.html">About Us</a></li>
           <li><a href="services.html">Services</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="consultation.html">Private Consultation</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Services</h4>
         <ul>
-          <li><a href="services.html#executive">Executive Protection</a></li>
-          <li><a href="services.html#aviation">Aviation &amp; Travel</a></li>
-          <li><a href="services.html#maritime">Yacht &amp; Maritime</a></li>
-          <li><a href="services.html#residential">Residences &amp; Estates</a></li>
-          <li><a href="services.html#family">Family Office</a></li>
+          <li><a href="estate-protection.html">The Private Estate</a></li>
+          <li><a href="executive-protection.html">The Executive Life</a></li>
+          <li><a href="luxury-hospitality-security.html">The World of Hospitality</a></li>
+          <li><a href="yacht-aviation-travel-security.html">The Private Journey</a></li>
+          <li><a href="private-event-security.html">The Art of Entertaining</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Private Line</h4>
         <ul>
-          <li>+1 (000) 000-0000</li>
-          <li>concierge@mahalo.example</li>
-          <li><a href="consultation.html">Request a consultation</a></li>
+          <li><a href="tel:+17274006259">727-400-6259</a></li>
+          <li><a href="mailto:info@mahalosecurity.com">info@mahalosecurity.com</a></li>
+          <li><a href="https://www.mahalosecurity.com/">www.mahalosecurity.com</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; <span id="year">2026</span> Mahalo. A division of [Parent Company].</span>
-      <span>Licensed &amp; insured · All engagements held in strict confidence</span>
+      <p class="license">MAHALO is an exclusive private-protection offering of <strong>Dumbarton Security Services LLC</strong><br>Florida Class B Security Agency License B1900383</p>
+      <span>&copy; <span id="year">2026</span> MAHALO. All engagements held in strict confidence.</span>
     </div>
   </div>
 </footer>
-<script src="assets/main.js"></script>
+<script src="assets/main.js?v=11"></script>
 </body>
 </html>
