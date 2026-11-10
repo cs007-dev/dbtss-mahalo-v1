@@ -18,7 +18,7 @@ OUT = os.path.join(ROOT, "Site")
 
 SITE = "https://www.mahalosecurity.com"
 TODAY = datetime.date.today().isoformat()
-ASSET_VERSION = "15"  # bump when styles.css or main.js change so browsers fetch the new files
+ASSET_VERSION = "16"  # bump when styles.css or main.js change so browsers fetch the new files
 
 PHONE_DISPLAY = "727-400-6259"
 PHONE_TEL = "+17274006259"
@@ -38,28 +38,65 @@ HERO_IMAGE = "assets/images/mahalo-estate-sunset-v2.webp"
 SHARE_IMAGE = "assets/images/mahalo-estate-sunset-share.jpg"  # 1200x630 JPG for link previews
 
 
-def unsplash(pid, w=2000):
-    return f"https://images.unsplash.com/photo-{pid}?auto=format&fit=crop&w={w}&q=75"
-
-
-IMG = {
-    "estate_tile": "1600607687920-4e2a09cf159d",
-    "estate_hero": "1600596542815-ffad4c1539a9",
-    "villa_pool": "1613490493576-7fde63acd811",
-    "family": "1511895426328-dc8714191300",
-    "jet": "1474302770737-173ee21bab63",
-    "wing": "1436491865332-7a61a109cc05",
-    "resort_pool": "1566073771259-6a8506099945",
-    "resort_twilight": "1542314831-068cd1dbfeeb",
-    "tropical_resort": "1520250497591-112f2f40a3f4",
-    "yacht": "1567899378494-47b22a2ae96a",
-    "superyacht": "1569263979104-865ab7cd8d13",
-    "celebration": "1519167758481-83f550bb49b3",
-    "dinner": "1414235077428-338989a2e8c0",
-    "coast": "1505852679233-d9fd70aff56d",
-    "aerial": "1506929562872-bb421503ef21",
-    "villa_dusk": "1600585154340-be6161a56a0c",
+# Photography: Unsplash photos (free for commercial use under the Unsplash
+# License), downloaded once and served from Site/assets/images. Each entry is
+# key: (Unsplash photo id, descriptive file name).
+PHOTOS = {
+    "villa_pool": ("1613490493576-7fde63acd811", "luxury-residence-pool"),
+    "villa_dusk": ("1600585154340-be6161a56a0c", "private-residence-dusk"),
+    "jet": ("1474302770737-173ee21bab63", "private-jet-runway-sunset"),
+    "wing": ("1436491865332-7a61a109cc05", "private-jet-wing-above-clouds"),
+    "resort_pool": ("1566073771259-6a8506099945", "luxury-resort-pool-palms"),
+    "resort_twilight": ("1542314831-068cd1dbfeeb", "luxury-resort-pool-twilight"),
+    "tropical_resort": ("1520250497591-112f2f40a3f4", "tropical-resort-pool"),
+    "yacht": ("1567899378494-47b22a2ae96a", "superyacht-at-anchor"),
+    "superyacht": ("1569263979104-865ab7cd8d13", "superyacht-cruising-coast"),
+    "celebration": ("1519167758481-83f550bb49b3", "private-celebration-ballroom"),
+    "dinner": ("1414235077428-338989a2e8c0", "private-dinner-table"),
+    "coast": ("1505852679233-d9fd70aff56d", "pacific-coast-cliffs"),
+    "aerial": ("1506929562872-bb421503ef21", "boats-turquoise-water-aerial"),
 }
+IMG = {key: key for key in PHOTOS}  # services and pages refer to photos by key
+PHOTO_DIR = os.path.join(OUT, "assets", "images")
+_photos_used = set()
+
+
+def photo(key, w):
+    """Local path of a photo at width w; the file is downloaded at the end of the build if missing."""
+    _photos_used.add((key, w))
+    return f"assets/images/{PHOTOS[key][1]}-{w}.jpg"
+
+
+def hero_photo(key):
+    """src/srcset for a full-width photo: phones load the 1200px file, large screens the 2400px."""
+    small, large = photo(key, 1200), photo(key, 2400)
+    return f'src="{large}" srcset="{small} 1200w, {large} 2400w" sizes="100vw"'
+
+
+def compress_photo(path):
+    """Recompress large photos with macOS sips; detail loss is invisible behind the site's photo overlays."""
+    import shutil
+    import subprocess
+    if shutil.which("sips") and os.path.getsize(path) > 250_000:
+        subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "low", path, "--out", path],
+                       check=True, capture_output=True)
+
+
+def download_photos():
+    import urllib.request
+    fetched = 0
+    for key, w in sorted(_photos_used):
+        pid, name = PHOTOS[key]
+        dest = os.path.join(PHOTO_DIR, f"{name}-{w}.jpg")
+        if os.path.exists(dest):
+            continue
+        quality = 70 if w >= 2000 else 76
+        url = f"https://images.unsplash.com/photo-{pid}?fm=jpg&w={w}&q={quality}"
+        with urllib.request.urlopen(url, timeout=60) as res, open(dest, "wb") as f:
+            f.write(res.read())
+        compress_photo(dest)
+        fetched += 1
+    return fetched
 
 # ---------------------------------------------------------------- services
 SERVICES = [
@@ -313,7 +350,7 @@ def service_schema(s):
         "serviceType": s["title"],
         "description": s["description"],
         "url": page_url(s["slug"]),
-        "image": unsplash(s["hero"], 1600),
+        "image": f"{SITE}/{photo(s['hero'], 1200)}",
         "provider": {"@id": ORG_ID},
         "audience": {"@type": "Audience", "audienceType": "Affluent individuals and families, executives, estate owners and luxury hospitality clients"},
     }
@@ -436,7 +473,7 @@ def footer():
     </div>
     <div class="footer-bottom">
       <p class="license">MAHALO is an exclusive private-protection offering of <strong>{OPERATOR}</strong><br>{LICENSE}</p>
-      <span>&copy; <span id="year">{TODAY[:4]}</span> MAHALO. All engagements held in strict confidence.</span>
+      <span>&copy; <span id="year">{TODAY[:4]}</span> MAHALO. All engagements held in strict confidence. <a href="privacy.html">Privacy Policy</a></span>
     </div>
   </div>
 </footer>
@@ -454,9 +491,9 @@ def page(fname, title, description, active, body, hero=True, **head_kw):
         f.write(doc)
 
 
-def cta_band(photo=IMG["aerial"], heading="A private conversation <em>begins here.</em>"):
+def cta_band(photo_key="aerial", heading="A private conversation <em>begins here.</em>"):
     return f"""<section class="cta-band" aria-labelledby="cta-title">
-  <img src="{unsplash(photo)}" alt="" loading="lazy" decoding="async">
+  <img {hero_photo(photo_key)} alt="" loading="lazy" decoding="async">
   <div class="wrap">
     <span class="eyebrow">Private inquiries</span>
     <h2 id="cta-title">{heading}</h2>
@@ -474,7 +511,7 @@ def experience_tile(s, with_text=True, lazy=True):
     loading = ' loading="lazy"' if lazy else ""
     text = f'<p>{s["short"]}</p><span class="more">Discover</span>' if with_text else ""
     return f"""<a class="experience reveal" href="{s['slug']}">
-        <img src="{unsplash(s['tile'], 900)}" alt="{esc(s['tile_alt'])}"{loading} decoding="async">
+        <img src="{photo(s['tile'], 900)}" alt="{esc(s['tile_alt'])}"{loading} decoding="async">
         <div class="experience-body"><span>{s['label']}</span><h3>{s['name']}</h3>{text}</div>
       </a>"""
 
@@ -558,7 +595,7 @@ home = f"""<main id="main">
 <section class="section">
   <div class="wrap split">
     <figure class="split-media reveal" style="margin:0">
-      <img src="{unsplash(IMG['superyacht'], 1400)}" alt="A superyacht cruising along a sunlit coast" loading="lazy" decoding="async">
+      <img src="{photo('superyacht', 1400)}" alt="A superyacht cruising along a sunlit coast" loading="lazy" decoding="async">
       <figcaption>The Private Journey</figcaption>
     </figure>
     <div class="split-body reveal">
@@ -621,7 +658,7 @@ page("index.html", "MAHALO | Private Lifestyle Protection & Estate Security",
 # ================================================================ ABOUT
 about = f"""<main id="main">
 <section class="hero hero--page">
-  <div class="hero-media"><img src="{unsplash(IMG['coast'], 2400)}" alt="Green cliffs meeting a turquoise Pacific ocean" fetchpriority="high"></div>
+  <div class="hero-media"><img {hero_photo('coast')} alt="Green cliffs meeting a turquoise Pacific ocean" fetchpriority="high"></div>
   <div class="wrap hero-content">
     <div>
       <span class="eyebrow rise">About MAHALO</span>
@@ -640,7 +677,7 @@ about = f"""<main id="main">
       <p class="lede">Rather than a security service, MAHALO is a way of living: estates that remain sanctuaries, journeys that unfold effortlessly and occasions that stay beautifully private. Protection is always present, and never the point.</p>
     </div>
     <figure class="split-media reveal" style="margin:0">
-      <img src="{unsplash(IMG['resort_twilight'], 1400)}" alt="A luxury resort and pool lit at twilight" loading="lazy" decoding="async">
+      <img src="{photo('resort_twilight', 1400)}" alt="A luxury resort and pool lit at twilight" loading="lazy" decoding="async">
       <figcaption>Hospitality is the standard</figcaption>
     </figure>
   </div>
@@ -706,7 +743,7 @@ rows = []
 for s in SERVICES:
     bullets = "".join(f"<li>{i}</li>" for i in s["included"][:3])
     rows.append(f"""    <article class="service reveal" id="{s['key']}">
-      <div class="service-media"><img src="{unsplash(s['tile'], 1400)}" alt="{esc(s['tile_alt'])}" loading="lazy" decoding="async"></div>
+      <div class="service-media"><img src="{photo(s['tile'], 1400)}" alt="{esc(s['tile_alt'])}" loading="lazy" decoding="async"></div>
       <div>
         <span class="service-tag">{s['short']}</span>
         <h2><a href="{s['slug']}" style="text-decoration:none">{s['name']}</a></h2>
@@ -718,7 +755,7 @@ for s in SERVICES:
 index_links = "".join(f'<li><a href="#{s["key"]}">{s["name"]}</a></li>' for s in SERVICES)
 services_page = f"""<main id="main">
 <section class="hero hero--page">
-  <div class="hero-media"><img src="{unsplash(IMG['aerial'], 2400)}" alt="An aerial view of boats moored in clear turquoise water" fetchpriority="high"></div>
+  <div class="hero-media"><img {hero_photo('aerial')} alt="An aerial view of boats moored in clear turquoise water" fetchpriority="high"></div>
   <div class="wrap hero-content">
     <div>
       <span class="eyebrow rise">Services</span>
@@ -763,7 +800,7 @@ for s in SERVICES:
     related = "\n      ".join(experience_tile(o, with_text=False) for o in SERVICES if o is not s)
     body = f"""<main id="main">
 <section class="hero hero--page">
-  <div class="hero-media"><img src="{unsplash(s['hero'], 2400)}" alt="{esc(s['hero_alt'])}" fetchpriority="high"></div>
+  <div class="hero-media"><img {hero_photo(s['hero'])} alt="{esc(s['hero_alt'])}" fetchpriority="high"></div>
   <div class="wrap hero-content">
     <div>
       <ol class="crumbs rise"><li><a href="index.html">Home</a></li><li><a href="services.html">Services</a></li><li aria-current="page">{s['name']}</li></ol>
@@ -818,7 +855,7 @@ for s in SERVICES:
 </main>
 """
     page(s["slug"], f"{s['title']} | MAHALO", s["description"], "services.html", body,
-         image=unsplash(s["hero"], 1200),
+         image=f"{SITE}/{photo(s['hero'], 1200)}",
          schemas=[service_schema(s), breadcrumb_schema([("index.html", "Home"), ("services.html", "Services"), (s["slug"], s["name"])])])
 
 # ================================================================ CONSULTATION
@@ -878,7 +915,7 @@ consult = f"""<main id="main" style="padding-top:calc(var(--header-h) + env(safe
         </div>
         <p class="form-error" role="alert" hidden>We couldn’t send your request just now. Please try again, or email <a href="mailto:{EMAIL}">{EMAIL}</a> or call <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>.</p>
         <div class="form-foot">
-          <small>We’ll store and process this information to respond to your request. You may opt out at any time.</small>
+          <small>We’ll store and process this information to respond to your request. You may opt out at any time. See our <a href="privacy.html">Privacy Policy</a>.</small>
           <button class="btn" type="submit"><span class="btn-label" data-default="Request Consultation">Request Consultation</span> <span class="arrow" aria-hidden="true">→</span></button>
         </div>
       </form>
@@ -935,7 +972,7 @@ contact = f"""<main id="main">
         </div>
         <p class="form-error" role="alert" hidden>We couldn’t send your message just now. Please try again, or email <a href="mailto:{EMAIL}">{EMAIL}</a> or call <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>.</p>
         <div class="form-foot">
-          <small>We’ll store and process this information to respond to your inquiry. You may opt out at any time.</small>
+          <small>We’ll store and process this information to respond to your inquiry. You may opt out at any time. See our <a href="privacy.html">Privacy Policy</a>.</small>
           <button class="btn" type="submit"><span class="btn-label" data-default="Send Message">Send Message</span> <span class="arrow" aria-hidden="true">→</span></button>
         </div>
       </form>
@@ -963,6 +1000,80 @@ page("contact.html", "Contact MAHALO: A Private Conversation Begins Here",
      "contact.html", contact,
      schemas=[org_schema(), breadcrumb_schema([("index.html", "Home"), ("contact.html", "Contact")])])
 
+# ================================================================ PRIVACY
+# Plain-language draft describing what this site actually does. Have counsel
+# review before launch, and update it whenever forms, hosting or tracking change.
+PRIVACY_UPDATED = "November 9, 2026"
+privacy = f"""<main id="main" style="padding-top:calc(var(--header-h) + env(safe-area-inset-top, 0px))">
+<section class="section">
+  <div class="wrap">
+    <article class="prose">
+      <span class="eyebrow">Privacy</span>
+      <h1>Privacy Policy</h1>
+      <p class="updated">Last updated {PRIVACY_UPDATED}</p>
+
+      <p>Discretion is the foundation of everything we do, and it extends to how we handle your information. This policy explains what information the MAHALO website collects, how we use it and the choices you have.</p>
+
+      <h2>Who we are</h2>
+      <p>MAHALO is an exclusive private-protection offering of {OPERATOR} (“MAHALO”, “we”, “us”), {LICENSE}. This policy applies to {WEBSITE_DISPLAY} and to inquiries made through it.</p>
+
+      <h2>Information you provide</h2>
+      <p>When you use our contact or consultation forms, you may share your first and last name, email address, telephone number, organization, the type of consultation you are interested in, your preferred method of contact, the services you are interested in and any message you choose to include. You may also share information with us when you call or email us.</p>
+      <p>Please share only what you are comfortable with. Detailed information about your residences, travel or security arrangements is best discussed in a private conversation rather than through the website.</p>
+
+      <h2>Information collected automatically</h2>
+      <p>Like most websites, the servers that host this site keep standard technical logs, such as your IP address, browser type, the pages you visit and the time of your visit, which are used to operate and secure the site. The site loads its typefaces from Google Fonts, so your browser connects to Google’s servers when pages load.</p>
+      <p>This website does not use advertising cookies or analytics tracking. If that changes, we will update this policy.</p>
+
+      <h2>How we use your information</h2>
+      <ul>
+        <li>To respond to your inquiry and arrange a confidential consultation</li>
+        <li>To plan, provide and manage the services you request</li>
+        <li>To send occasional communications related to your inquiry or our services, which you may opt out of at any time</li>
+        <li>To operate, secure and improve this website</li>
+        <li>To meet our legal, licensing and regulatory obligations</li>
+      </ul>
+
+      <h2>How we share information</h2>
+      <p>We do not sell or rent your personal information. We share it only as needed with:</p>
+      <ul>
+        <li>The MAHALO and {OPERATOR} team members who handle your inquiry or engagement</li>
+        <li>Service providers who support our operations, such as HubSpot, which stores and manages the inquiries submitted through our forms, and the companies that host this website and our email, each under their own privacy and security obligations</li>
+        <li>Authorities or other parties when required by law, or when necessary to protect the safety, rights or property of our clients, our team or others</li>
+      </ul>
+
+      <h2>How long we keep information</h2>
+      <p>We keep your information for as long as needed to respond to you, to provide our services and to meet our legal and licensing obligations, and then delete it or keep it in a form that no longer identifies you.</p>
+
+      <h2>How we protect information</h2>
+      <p>We use reasonable administrative, technical and physical safeguards to protect your information and limit access to those who need it. No method of transmission or storage is completely secure, so we cannot guarantee absolute security.</p>
+
+      <h2>Your choices</h2>
+      <p>You may ask us to tell you what personal information we hold about you, to correct or delete it, or to stop sending you communications, by emailing <a href="mailto:{EMAIL}">{EMAIL}</a> or calling <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>. We may need to verify your identity before acting on a request, and we may keep certain information where the law requires it.</p>
+
+      <h2>Children</h2>
+      <p>This website is intended for adults. We do not knowingly collect personal information online from children under 13. If you believe a child has provided us with information, please contact us and we will delete it.</p>
+
+      <h2>Other websites</h2>
+      <p>Links to other websites are provided for convenience. Their privacy practices are their own, and we encourage you to review their policies.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>We may update this policy from time to time. The date at the top of this page shows when it was last revised.</p>
+
+      <h2>Contact us</h2>
+      <p>{OPERATOR}, operating MAHALO<br>
+        Telephone: <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a><br>
+        Email: <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+    </article>
+  </div>
+</section>
+</main>
+"""
+page("privacy.html", "Privacy Policy | MAHALO",
+     f"How MAHALO, an offering of {OPERATOR}, collects, uses and protects information shared through this website.",
+     "", privacy, hero=False,
+     schemas=[breadcrumb_schema([("index.html", "Home"), ("privacy.html", "Privacy Policy")])])
+
 # ================================================================ 404
 not_found = f"""<main id="main" style="padding-top:calc(var(--header-h) + env(safe-area-inset-top, 0px))">
 <section class="section">
@@ -981,8 +1092,8 @@ not_found = f"""<main id="main" style="padding-top:calc(var(--header-h) + env(sa
 page("404.html", "Page Not Found | MAHALO", "The page you were looking for could not be found.", "", not_found, hero=False, noindex=True)
 
 # ================================================================ sitemap, robots, llms.txt
-INDEXED = ["index.html", "about.html", "services.html"] + [s["slug"] for s in SERVICES] + ["consultation.html", "contact.html"]
-PRIORITY = {"index.html": "1.0", "services.html": "0.9", "about.html": "0.7", "consultation.html": "0.7", "contact.html": "0.7"}
+INDEXED = ["index.html", "about.html", "services.html"] + [s["slug"] for s in SERVICES] + ["consultation.html", "contact.html", "privacy.html"]
+PRIORITY = {"index.html": "1.0", "services.html": "0.9", "about.html": "0.7", "consultation.html": "0.7", "contact.html": "0.7", "privacy.html": "0.3"}
 urls = "\n".join(
     f"  <url><loc>{page_url(f)}</loc><lastmod>{TODAY}</lastmod><priority>{PRIORITY.get(f, '0.8')}</priority></url>"
     for f in INDEXED
@@ -998,7 +1109,7 @@ with open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8") as f:
     f.write("User-agent: *\n")
     for bot in AI_AND_SEARCH_BOTS:
         f.write(f"User-agent: {bot}\n")
-    f.write("Allow: /\nDisallow: /brand/\n\n")
+    f.write("Allow: /\n\n")
     f.write(f"Sitemap: {SITE}/sitemap.xml\n")
 
 llms = [
@@ -1023,4 +1134,13 @@ llms += [f"- **{q}** {a}" for q, a in FAQ]
 with open(os.path.join(OUT, "llms.txt"), "w", encoding="utf-8") as f:
     f.write("\n".join(llms) + "\n")
 
-print("Built", len(INDEXED) + 1, "pages, sitemap.xml, robots.txt and llms.txt")
+fetched = download_photos()
+credits = ["# Image sources", "",
+           "Photographs from Unsplash (https://unsplash.com/license): free for commercial use, no attribution required.",
+           "Generated by tools/build_site.py.", ""]
+credits += [f"- assets/images/{name}-*.jpg: https://images.unsplash.com/photo-{pid}" for pid, name in sorted(PHOTOS.values(), key=lambda p: p[1])]
+credits += [f"- {HERO_IMAGE}, {SHARE_IMAGE}: MAHALO's own generated estate image"]
+with open(os.path.join(ROOT, "IMAGE-SOURCES.md"), "w", encoding="utf-8") as f:
+    f.write("\n".join(credits) + "\n")
+
+print("Built", len(INDEXED) + 1, "pages, sitemap.xml, robots.txt and llms.txt;", fetched, "photos downloaded")

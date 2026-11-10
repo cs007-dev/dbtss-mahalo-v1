@@ -15,6 +15,5 @@ User-agent: Claude-SearchBot
 User-agent: Claude-User
 User-agent: DuckAssistBot
 Allow: /
-Disallow: /brand/
 
 Sitemap: https://www.mahalosecurity.com/sitemap.xml

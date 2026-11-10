@@ -1435,3 +1435,16 @@ a.contact-line:hover strong { color: var(--lagoon-2); }
   /* Phones: one call to action keeps the headline clear of the yacht; the consultation button lives in the menu */
   .hero--home .hero-actions .btn--ghost-light { display: none; }
 }
+
+/* Long-form text pages (privacy policy) */
+.prose { max-width: 46rem; }
+.prose h1 { font-size: var(--t-3xl); margin-block: 1.25rem 0.75rem; }
+.prose .updated { font-size: var(--t-sm); color: var(--stone); margin-bottom: 2.5rem; }
+.prose h2 { font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem); margin-block: 2.75rem 1rem; }
+.prose p, .prose li { color: var(--basalt); line-height: 1.8; }
+.prose p + p { margin-top: 1rem; }
+.prose ul { margin: 1rem 0 0; padding-left: 1.25rem; display: grid; gap: 0.5rem; }
+.prose li::marker { color: var(--brass); }
+.prose a { color: var(--lagoon-2); text-underline-offset: 3px; }
+.footer-bottom a { color: inherit; text-underline-offset: 3px; }
+.form-foot small a { color: inherit; text-underline-offset: 2px; }
