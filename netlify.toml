@@ -9,6 +9,14 @@
 # Netlify serves about.html at /about and rewrites internal links to that
 # clean form; canonical URLs and the sitemap use the same clean addresses.
 
+# Forms post to our own domain and Netlify forwards them to HubSpot's Forms API,
+# so Safari tracker blocking and content blockers cannot stop a submission.
+[[redirects]]
+  from = "/api/hubspot/submit/*"
+  to = "https://api.hsforms.com/submissions/v3/integration/submit/:splat"
+  status = 200
+  force = true
+
 # Security headers for every page
 [[headers]]
   for = "/*"

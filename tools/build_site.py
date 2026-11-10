@@ -18,7 +18,7 @@ OUT = os.path.join(ROOT, "Site")
 
 SITE = "https://www.mahalosecurity.com"
 TODAY = datetime.date.today().isoformat()
-ASSET_VERSION = "17"  # bump when styles.css or main.js change so browsers fetch the new files
+ASSET_VERSION = "18"  # bump when styles.css or main.js change so browsers fetch the new files
 
 PHONE_DISPLAY = "727-400-6259"
 PHONE_TEL = "+17274006259"

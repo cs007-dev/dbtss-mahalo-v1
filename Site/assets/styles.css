@@ -1448,3 +1448,14 @@ a.contact-line:hover strong { color: var(--lagoon-2); }
 .prose a { color: var(--lagoon-2); text-underline-offset: 3px; }
 .footer-bottom a { color: inherit; text-underline-offset: 3px; }
 .form-foot small a { color: inherit; text-underline-offset: 2px; }
+
+/* Form diagnostics, shown only with ?debug=1 */
+.form-debug {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--basalt);
+  color: #b9f3c9;
+  font: 12px/1.6 ui-monospace, Menlo, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

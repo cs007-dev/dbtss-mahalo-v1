@@ -59,8 +59,30 @@
   // HubSpot forms: the site's own form, submitted to HubSpot's Forms API so it
   // lands in HubSpot exactly as an embedded HubSpot form would. Field names must
   // match the HubSpot form's internal property names (firstname, email, ...).
-  var HUBSPOT_SUBMIT = "https://api.hsforms.com/submissions/v3/integration/submit/";
+  //
+  // On the live site the form posts to /api/hubspot/submit/ on our own domain,
+  // which Netlify forwards to HubSpot (see netlify.toml). Safari's tracker
+  // blocking and content blockers can stop requests to HubSpot's own domain;
+  // a same-site request is never blocked. The local preview has no forwarding,
+  // so it posts to HubSpot directly.
+  var HUBSPOT_DIRECT = "https://api.hsforms.com/submissions/v3/integration/submit/";
+  var HUBSPOT_PROXY = "/api/hubspot/submit/";
+  var isLocal = location.protocol === "file:" || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  var HUBSPOT_SUBMIT = isLocal ? HUBSPOT_DIRECT : HUBSPOT_PROXY;
   var MIN_FILL_MS = 3000; // a submission this fast with no human interaction is a bot
+  // Add ?debug=1 to a form page to see on screen what happens when it is sent.
+  var DEBUG = /[?&]debug=1(&|$)/.test(location.search);
+
+  function debugLog(form, line) {
+    if (!DEBUG) return;
+    var box = form.parentNode.querySelector(".form-debug");
+    if (!box) {
+      box = document.createElement("pre");
+      box.className = "form-debug";
+      form.parentNode.appendChild(box);
+    }
+    box.textContent += line + "\n";
+  }
 
   function hubspotCookie() {
     var match = document.cookie.match(/(?:^|;\s*)hubspotutk=([^;]+)/);
@@ -85,12 +107,18 @@
         form.reportValidity();
         return;
       }
-      // Spam traps: a hidden field people never see (named so browser and
-      // password-manager autofill ignore it), and an instant submission with no
-      // human interaction. Bots that trip them see the thank-you without sending.
+      // Spam traps: a hidden field people never see, and an instant submission.
+      // Both only count when nobody touched or typed on the page, so a real
+      // visitor is never discarded, even if autofill fills the hidden field.
+      // Bots that trip them see the thank-you without anything being sent.
       var trap = form.querySelector(".hp-field input");
-      var instantBot = !interacted && Date.now() - openedAt < MIN_FILL_MS;
-      if ((trap && trap.value) || instantBot) {
+      var trapFilled = !!(trap && trap.value);
+      var seconds = (Date.now() - openedAt) / 1000;
+      debugLog(form, "Human interaction: " + (interacted ? "yes" : "no"));
+      debugLog(form, "Hidden field filled: " + (trapFilled ? "yes" : "no"));
+      debugLog(form, "Seconds on page: " + seconds.toFixed(1));
+      if (!interacted && (trapFilled || seconds * 1000 < MIN_FILL_MS)) {
+        debugLog(form, "Result: treated as a bot, nothing sent");
         showSuccess(form);
         return;
       }
@@ -116,16 +144,20 @@
       if (button) button.disabled = true;
       if (label) label.textContent = "Sending…";
 
-      fetch(HUBSPOT_SUBMIT + form.getAttribute("data-hubspot-portal") + "/" + form.getAttribute("data-hubspot-form"), {
+      var endpoint = HUBSPOT_SUBMIT + form.getAttribute("data-hubspot-portal") + "/" + form.getAttribute("data-hubspot-form");
+      debugLog(form, "Sending " + fields.length + " fields to " + endpoint);
+      fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fields: fields, context: context })
       })
         .then(function (res) {
+          debugLog(form, "Result: HTTP " + res.status);
           if (!res.ok) throw new Error("HubSpot responded " + res.status);
           showSuccess(form);
         })
-        .catch(function () {
+        .catch(function (err) {
+          debugLog(form, "Failed: " + (err && err.message ? err.message : err));
           if (error) error.hidden = false;
           if (button) button.disabled = false;
           if (label) label.textContent = label.getAttribute("data-default");
