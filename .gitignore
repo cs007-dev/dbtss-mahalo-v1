@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# Editor / local tooling
+.vscode/
+*.swp

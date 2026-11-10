@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Secure Consultation</title>
+<meta name="description" content="Request a confidential consultation with Mahalo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Jost:wght@300..600&display=swap">
+<link rel="stylesheet" href="assets/styles.css?v=5">
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <!-- LOGO PLACEHOLDER — replace the .brand contents with the Mahalo logo (SVG recommended) -->
+    <a class="brand" href="index.html" aria-label="Mahalo home">
+      <span class="brand-mark" aria-hidden="true">M</span>
+      <span class="brand-word"><strong>MAHALO</strong><small>Private Lifestyle Protection</small></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu"><span></span><span></span></button>
+    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
+      <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+      </ul>
+      <div class="nav-ctas">
+        <a class="nav-contact" href="contact.html">Contact</a>
+        <a class="btn" href="consultation.html">Request a Secure Consultation</a>
+      </div>
+    </nav>
+  </div>
+</header>
+<main id="main" style="padding-top:calc(var(--header-h) + env(safe-area-inset-top, 0px))">
+<section class="section">
+  <div class="wrap form-layout">
+    <div class="form-aside">
+      <span class="eyebrow">Secure consultation</span>
+      <h2>Tell us a little. <em>We’ll take it from there.</em></h2>
+      <p class="lede">Share only what you’re comfortable with. A senior member of our team will reach out personally — typically within one business day — to arrange a confidential conversation.</p>
+      <dl>
+        <div><dt>Private line</dt><dd>+1 (000) 000-0000</dd></div>
+        <div><dt>Secure email</dt><dd>concierge@mahalo.example</dd></div>
+        <div><dt>Availability</dt><dd>Around the clock, every day of the year</dd></div>
+      </dl>
+      <p class="note">Requests are handled only by senior staff and are never shared. We are happy to sign a mutual NDA before any detailed discussion.</p>
+    </div>
+
+    <div class="form">
+      <form id="consult-form" data-mahalo-form data-success="consult-success" novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="c-name">Full name</label><input id="c-name" name="name" autocomplete="name" required></div>
+          <div class="field"><label for="c-org">Organization <span class="optional">(optional)</span></label><input id="c-org" name="organization" autocomplete="organization"></div>
+          <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="c-phone">Phone <span class="optional">(optional)</span></label><input id="c-phone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="c-for">Consultation is for</label>
+            <select id="c-for" name="for" required>
+              <option value="">Select one</option>
+              <option>Myself</option>
+              <option>An executive or principal I represent</option>
+              <option>My family</option>
+              <option>A family office</option>
+              <option>An event or meeting</option>
+            </select>
+          </div>
+          <div class="field"><label for="c-contact">Preferred contact</label>
+            <select id="c-contact" name="contact">
+              <option>Phone call</option>
+              <option>Email</option>
+              <option>Secure video</option>
+              <option>In-person meeting</option>
+            </select>
+          </div>
+          <fieldset class="field field--full">
+            <legend>Areas of interest <span class="optional">(select any)</span></legend>
+            <div class="chips">
+            <label class="chip"><input type="checkbox" name="interest" id="int-0" value="Executive protection"><span>Executive protection</span></label>
+            <label class="chip"><input type="checkbox" name="interest" id="int-1" value="Aviation &amp; travel"><span>Aviation &amp; travel</span></label>
+            <label class="chip"><input type="checkbox" name="interest" id="int-2" value="Yacht &amp; maritime"><span>Yacht &amp; maritime</span></label>
+            <label class="chip"><input type="checkbox" name="interest" id="int-3" value="Residences &amp; estates"><span>Residences &amp; estates</span></label>
+            <label class="chip"><input type="checkbox" name="interest" id="int-4" value="Family protection"><span>Family protection</span></label>
+            <label class="chip"><input type="checkbox" name="interest" id="int-5" value="Private events"><span>Private events</span></label>
+            <label class="chip"><input type="checkbox" name="interest" id="int-6" value="Advisory &amp; intelligence"><span>Advisory &amp; intelligence</span></label>
+            </div>
+          </fieldset>
+          <div class="field"><label for="c-timing">Timing</label>
+            <select id="c-timing" name="timing">
+              <option>Exploring options</option>
+              <option>Within the next month</option>
+              <option>Within the next week</option>
+              <option>Immediate need</option>
+            </select>
+          </div>
+          <div class="field"><label for="c-region">Primary region <span class="optional">(optional)</span></label><input id="c-region" name="region" placeholder="e.g. New York, Monaco, Maui"></div>
+          <div class="field field--full"><label for="c-msg">Anything you’d like us to know <span class="optional">(optional)</span></label><textarea id="c-msg" name="message" placeholder="Upcoming travel, events or concerns — as much or as little as you like."></textarea></div>
+        </div>
+        <div class="form-foot">
+          <small>By submitting, you agree to be contacted by Mahalo. Your information is held in strict confidence.</small>
+          <button class="btn" type="submit">Request Consultation <span class="arrow" aria-hidden="true">→</span></button>
+        </div>
+      </form>
+      <div class="form-success" id="consult-success" tabindex="-1" hidden>
+        <span class="eyebrow">Mahalo</span>
+        <h3 style="margin-top:1.25rem">Thank you. <em>Your request is received.</em></h3>
+        <p>A senior member of our team will contact you personally, using your preferred method, to arrange a confidential conversation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="index.html" aria-label="Mahalo home">
+          <span class="brand-mark" aria-hidden="true">M</span>
+          <span class="brand-word"><strong>MAHALO</strong><small>Private Lifestyle Protection</small></span>
+        </a>
+        <p class="footer-tagline">Environments where extraordinary people work, travel, invest and live without distraction.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#executive">Executive Protection</a></li>
+          <li><a href="services.html#aviation">Aviation &amp; Travel</a></li>
+          <li><a href="services.html#maritime">Yacht &amp; Maritime</a></li>
+          <li><a href="services.html#residential">Residences &amp; Estates</a></li>
+          <li><a href="services.html#family">Family Office</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Private Line</h4>
+        <ul>
+          <li>+1 (000) 000-0000</li>
+          <li>concierge@mahalo.example</li>
+          <li><a href="consultation.html">Request a consultation</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year">2026</span> Mahalo. A division of [Parent Company].</span>
+      <span>Licensed &amp; insured · All engagements held in strict confidence</span>
+    </div>
+  </div>
+</footer>
+<script src="assets/main.js"></script>
+</body>
+</html>
