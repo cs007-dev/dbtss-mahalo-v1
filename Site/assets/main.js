@@ -60,7 +60,7 @@
   // lands in HubSpot exactly as an embedded HubSpot form would. Field names must
   // match the HubSpot form's internal property names (firstname, email, ...).
   var HUBSPOT_SUBMIT = "https://api.hsforms.com/submissions/v3/integration/submit/";
-  var MIN_FILL_MS = 3000; // faster than this is almost certainly a bot
+  var MIN_FILL_MS = 3000; // a submission this fast with no human interaction is a bot
 
   function hubspotCookie() {
     var match = document.cookie.match(/(?:^|;\s*)hubspotutk=([^;]+)/);
@@ -69,6 +69,12 @@
 
   document.querySelectorAll("form[data-hubspot-form]").forEach(function (form) {
     var openedAt = Date.now();
+    // Real visitors touch, click or type on the page (autofill included);
+    // scripted bots do not generate these trusted events.
+    var interacted = false;
+    ["pointerdown", "touchstart", "keydown", "input"].forEach(function (type) {
+      form.addEventListener(type, function (ev) { if (ev.isTrusted) interacted = true; }, { passive: true });
+    });
     var button = form.querySelector("button[type='submit']");
     var label = button && button.querySelector(".btn-label");
     var error = form.querySelector(".form-error");
@@ -79,10 +85,12 @@
         form.reportValidity();
         return;
       }
-      // Spam traps: a hidden field people never see, and a minimum time on the
-      // page. Bots that trip them are shown the thank-you without sending.
+      // Spam traps: a hidden field people never see (named so browser and
+      // password-manager autofill ignore it), and an instant submission with no
+      // human interaction. Bots that trip them see the thank-you without sending.
       var trap = form.querySelector(".hp-field input");
-      if ((trap && trap.value) || Date.now() - openedAt < MIN_FILL_MS) {
+      var instantBot = !interacted && Date.now() - openedAt < MIN_FILL_MS;
+      if ((trap && trap.value) || instantBot) {
         showSuccess(form);
         return;
       }

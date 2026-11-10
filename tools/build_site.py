@@ -18,7 +18,7 @@ OUT = os.path.join(ROOT, "Site")
 
 SITE = "https://www.mahalosecurity.com"
 TODAY = datetime.date.today().isoformat()
-ASSET_VERSION = "16"  # bump when styles.css or main.js change so browsers fetch the new files
+ASSET_VERSION = "17"  # bump when styles.css or main.js change so browsers fetch the new files
 
 PHONE_DISPLAY = "727-400-6259"
 PHONE_TEL = "+17274006259"
@@ -916,7 +916,7 @@ consult = f"""<main id="main" style="padding-top:calc(var(--header-h) + env(safe
             </div>
           </fieldset>
           <div class="field field--full"><label for="c-msg">Anything you’d like us to know <span class="optional">(optional)</span></label><textarea id="c-msg" name="message" placeholder="Residences, upcoming travel or occasions, as much or as little as you like."></textarea></div>
-          <div class="field hp-field" aria-hidden="true"><label for="c-website">Leave this field empty</label><input id="c-website" name="website_url" tabindex="-1" autocomplete="off"></div>
+          <div class="field hp-field" aria-hidden="true"><label for="c-hp">Leave blank</label><input id="c-hp" name="mh_hp" type="text" tabindex="-1" autocomplete="off" data-1p-ignore data-lpignore="true" data-bwignore data-form-type="other"></div>
         </div>
         <p class="form-error" role="alert" hidden>We couldn’t send your request just now. Please try again, or email <a href="mailto:{EMAIL}">{EMAIL}</a> or call <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>.</p>
         <div class="form-foot">
@@ -973,7 +973,7 @@ contact = f"""<main id="main">
           <div class="field"><label for="k-email">Email</label><input id="k-email" name="email" type="email" autocomplete="email" required></div>
           <div class="field"><label for="k-phone">Phone <span class="optional">(optional)</span></label><input id="k-phone" name="phone" type="tel" autocomplete="tel"></div>
           <div class="field field--full"><label for="k-msg">Message <span class="optional">(optional)</span></label><textarea id="k-msg" name="message"></textarea></div>
-          <div class="field hp-field" aria-hidden="true"><label for="k-website">Leave this field empty</label><input id="k-website" name="website_url" tabindex="-1" autocomplete="off"></div>
+          <div class="field hp-field" aria-hidden="true"><label for="k-hp">Leave blank</label><input id="k-hp" name="mh_hp" type="text" tabindex="-1" autocomplete="off" data-1p-ignore data-lpignore="true" data-bwignore data-form-type="other"></div>
         </div>
         <p class="form-error" role="alert" hidden>We couldn’t send your message just now. Please try again, or email <a href="mailto:{EMAIL}">{EMAIL}</a> or call <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>.</p>
         <div class="form-foot">
