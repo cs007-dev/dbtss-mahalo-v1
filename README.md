@@ -39,7 +39,16 @@ Then open http://localhost:8133.
 
 ## Forms
 
-The site is static, so the consultation and contact forms open the visitor's
-email app with a message to info@mahalosecurity.com already written. To receive
-submissions directly instead, connect the forms to a form service (for example
-Formspree or the host's built-in forms) when the site is deployed.
+**Contact page** — the site's own form, sent to HubSpot through HubSpot's Forms
+API (portal 247943745, form `04888fa2-5032-4e24-8c97-db61eaa0708c`), so
+submissions, contacts and notifications appear in HubSpot as usual.
+
+- The HubSpot form must have **reCAPTCHA turned off** (HubSpot rejects API
+  submissions from forms with captcha). Spam is filtered on the site instead by a
+  hidden trap field and a minimum time on the page (`assets/main.js`).
+- Field `name` attributes must match the HubSpot form's internal property names:
+  `firstname`, `lastname`, `email`, `phone`, `message`. If you add a field in
+  HubSpot, add a matching input in `tools/build_site.py`.
+
+**Consultation page** — opens the visitor's email app with a message to
+info@mahalosecurity.com already written. It can be moved to HubSpot the same way.

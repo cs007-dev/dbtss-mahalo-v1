@@ -1399,3 +1399,21 @@ a.contact-line:hover strong { color: var(--lagoon-2); }
 @media (max-width: 520px) {
   .btn { white-space: normal; text-align: center; line-height: 1.5; }
 }
+
+/* HubSpot-connected form: hidden spam trap, error message, sending state */
+.hp-field {
+  position: absolute !important;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.form-error {
+  margin-top: 1.75rem;
+  padding: 1rem 1.25rem;
+  border-left: 1px solid #9b3b2e;
+  background: #f6ecea;
+  color: #6e2a20;
+  font-size: var(--t-sm);
+}
+.btn:disabled { opacity: 0.6; cursor: progress; }

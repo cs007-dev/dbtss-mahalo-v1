@@ -68,6 +68,15 @@
       "&body=" + encodeURIComponent(lines.join("\n") + "\n");
   }
 
+  function showSuccess(form) {
+    var success = document.getElementById(form.getAttribute("data-success"));
+    form.hidden = true;
+    if (success) {
+      success.hidden = false;
+      success.focus();
+    }
+  }
+
   document.querySelectorAll("form[data-mahalo-form]").forEach(function (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -76,12 +85,69 @@
         return;
       }
       window.location.href = composeEmail(form);
-      var success = document.getElementById(form.getAttribute("data-success"));
-      form.hidden = true;
-      if (success) {
-        success.hidden = false;
-        success.focus();
+      showSuccess(form);
+    });
+  });
+
+  // HubSpot forms: the site's own form, submitted to HubSpot's Forms API so it
+  // lands in HubSpot exactly as an embedded HubSpot form would. Field names must
+  // match the HubSpot form's internal property names (firstname, email, ...).
+  var HUBSPOT_SUBMIT = "https://api.hsforms.com/submissions/v3/integration/submit/";
+  var MIN_FILL_MS = 3000; // faster than this is almost certainly a bot
+
+  function hubspotCookie() {
+    var match = document.cookie.match(/(?:^|;\s*)hubspotutk=([^;]+)/);
+    return match ? match[1] : undefined;
+  }
+
+  document.querySelectorAll("form[data-hubspot-form]").forEach(function (form) {
+    var openedAt = Date.now();
+    var button = form.querySelector("button[type='submit']");
+    var label = button && button.querySelector(".btn-label");
+    var error = form.querySelector(".form-error");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
       }
+      // Spam traps: a hidden field people never see, and a minimum time on the
+      // page. Bots that trip them are shown the thank-you without sending.
+      var trap = form.querySelector(".hp-field input");
+      if ((trap && trap.value) || Date.now() - openedAt < MIN_FILL_MS) {
+        showSuccess(form);
+        return;
+      }
+
+      var fields = [];
+      form.querySelectorAll("[name]").forEach(function (field) {
+        if (field.closest(".hp-field")) return;
+        var value = (field.value || "").trim();
+        if (value) fields.push({ objectTypeId: "0-1", name: field.name, value: value });
+      });
+      var context = { pageUri: window.location.href, pageName: document.title };
+      var hutk = hubspotCookie();
+      if (hutk) context.hutk = hutk;
+
+      if (error) error.hidden = true;
+      if (button) button.disabled = true;
+      if (label) label.textContent = "Sending…";
+
+      fetch(HUBSPOT_SUBMIT + form.getAttribute("data-hubspot-portal") + "/" + form.getAttribute("data-hubspot-form"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fields: fields, context: context })
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("HubSpot responded " + res.status);
+          showSuccess(form);
+        })
+        .catch(function () {
+          if (error) error.hidden = false;
+          if (button) button.disabled = false;
+          if (label) label.textContent = "Send Message";
+        });
     });
   });
 
