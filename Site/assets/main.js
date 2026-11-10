@@ -47,27 +47,6 @@
     items.forEach(function (el) { el.classList.add("is-in"); });
   }
 
-  // Forms: the site has no server, so each form opens the visitor's email app
-  // with a message to MAHALO already written from the fields they filled in.
-  var MAHALO_EMAIL = "info@mahalosecurity.com";
-
-  function composeEmail(form) {
-    var lines = [];
-    form.querySelectorAll("[name]").forEach(function (field) {
-      if (field.type === "checkbox" && !field.checked) return;
-      var value = (field.value || "").trim();
-      if (!value) return;
-      var label = field.getAttribute("data-label") || field.name;
-      lines.push(label + ": " + value);
-    });
-    var subject = form.getAttribute("data-subject") || "MAHALO inquiry";
-    var name = form.querySelector("[name='name']");
-    if (name && name.value.trim()) subject += " — " + name.value.trim();
-    return "mailto:" + MAHALO_EMAIL +
-      "?subject=" + encodeURIComponent(subject) +
-      "&body=" + encodeURIComponent(lines.join("\n") + "\n");
-  }
-
   function showSuccess(form) {
     var success = document.getElementById(form.getAttribute("data-success"));
     form.hidden = true;
@@ -76,18 +55,6 @@
       success.focus();
     }
   }
-
-  document.querySelectorAll("form[data-mahalo-form]").forEach(function (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-      window.location.href = composeEmail(form);
-      showSuccess(form);
-    });
-  });
 
   // HubSpot forms: the site's own form, submitted to HubSpot's Forms API so it
   // lands in HubSpot exactly as an embedded HubSpot form would. Field names must
@@ -120,11 +87,18 @@
         return;
       }
 
-      var fields = [];
+      // One entry per field name; ticked checkboxes sharing a name are joined
+      // with ";", which is how HubSpot receives multiple-checkbox values.
+      var values = {};
       form.querySelectorAll("[name]").forEach(function (field) {
         if (field.closest(".hp-field")) return;
+        if (field.type === "checkbox" && !field.checked) return;
         var value = (field.value || "").trim();
-        if (value) fields.push({ objectTypeId: "0-1", name: field.name, value: value });
+        if (!value) return;
+        (values[field.name] = values[field.name] || []).push(value);
+      });
+      var fields = Object.keys(values).map(function (name) {
+        return { objectTypeId: "0-1", name: name, value: values[name].join(";") };
       });
       var context = { pageUri: window.location.href, pageName: document.title };
       var hutk = hubspotCookie();
@@ -146,7 +120,7 @@
         .catch(function () {
           if (error) error.hidden = false;
           if (button) button.disabled = false;
-          if (label) label.textContent = "Send Message";
+          if (label) label.textContent = label.getAttribute("data-default");
         });
     });
   });

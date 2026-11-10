@@ -18,16 +18,17 @@ OUT = os.path.join(ROOT, "Site")
 
 SITE = "https://www.mahalosecurity.com"
 TODAY = datetime.date.today().isoformat()
-ASSET_VERSION = "14"  # bump when styles.css or main.js change so browsers fetch the new files
+ASSET_VERSION = "15"  # bump when styles.css or main.js change so browsers fetch the new files
 
 PHONE_DISPLAY = "727-400-6259"
 PHONE_TEL = "+17274006259"
 EMAIL = "info@mahalosecurity.com"
 WEBSITE_DISPLAY = "www.mahalosecurity.com"
 
-# HubSpot form that receives contact page submissions (sent by assets/main.js)
+# HubSpot forms that receive the site's submissions (sent by assets/main.js)
 HUBSPOT_PORTAL = "247943745"
 HUBSPOT_CONTACT_FORM = "04888fa2-5032-4e24-8c97-db61eaa0708c"
+HUBSPOT_CONSULTATION_FORM = "c8c878c2-7aea-4b94-8a8f-585ebe8103b0"
 
 OPERATOR = "Dumbarton Security Services LLC"
 LICENSE = "Florida Class B Security Agency License B1900383"
@@ -822,7 +823,7 @@ for s in SERVICES:
 
 # ================================================================ CONSULTATION
 interest_chips = "\n".join(
-    f'            <label class="chip"><input type="checkbox" name="interest" id="int-{s["key"]}" value="{s["name"]}" data-label="Interest"><span>{s["name"]}</span></label>'
+    f'            <label class="chip"><input type="checkbox" name="areas_of_interest" id="int-{s["key"]}" value="{s["name"]}"><span>{s["name"]}</span></label>'
     for s in SERVICES
 )
 consult = f"""<main id="main" style="padding-top:calc(var(--header-h) + env(safe-area-inset-top, 0px))">
@@ -840,14 +841,16 @@ consult = f"""<main id="main" style="padding-top:calc(var(--header-h) + env(safe
     </div>
 
     <div class="form">
-      <form id="consult-form" data-mahalo-form data-success="consult-success" data-subject="Private consultation request" novalidate>
+      <!-- Submissions go to HubSpot form {HUBSPOT_CONSULTATION_FORM} (portal {HUBSPOT_PORTAL}). Field names and option values match HubSpot's internal values. -->
+      <form id="consult-form" data-hubspot-portal="{HUBSPOT_PORTAL}" data-hubspot-form="{HUBSPOT_CONSULTATION_FORM}" data-success="consult-success" novalidate>
         <div class="form-grid">
-          <div class="field"><label for="c-name">Full name</label><input id="c-name" name="name" data-label="Name" autocomplete="name" required></div>
-          <div class="field"><label for="c-org">Organization <span class="optional">(optional)</span></label><input id="c-org" name="organization" data-label="Organization" autocomplete="organization"></div>
-          <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" data-label="Email" type="email" autocomplete="email" required></div>
-          <div class="field"><label for="c-phone">Phone <span class="optional">(optional)</span></label><input id="c-phone" name="phone" data-label="Phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="c-first">First name</label><input id="c-first" name="firstname" autocomplete="given-name" required></div>
+          <div class="field"><label for="c-last">Last name</label><input id="c-last" name="lastname" autocomplete="family-name" required></div>
+          <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="c-phone">Phone <span class="optional">(optional)</span></label><input id="c-phone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="c-org">Organization <span class="optional">(optional)</span></label><input id="c-org" name="company" autocomplete="organization"></div>
           <div class="field"><label for="c-for">Consultation is for</label>
-            <select id="c-for" name="for" data-label="Consultation is for" required>
+            <select id="c-for" name="consultation_is_for" required>
               <option value="">Select one</option>
               <option>Myself</option>
               <option>My family</option>
@@ -857,11 +860,11 @@ consult = f"""<main id="main" style="padding-top:calc(var(--header-h) + env(safe
               <option>An event or gathering</option>
             </select>
           </div>
-          <div class="field"><label for="c-contact">Preferred contact</label>
-            <select id="c-contact" name="contact" data-label="Preferred contact">
-              <option>Phone call</option>
-              <option>Email</option>
-              <option>In-person meeting</option>
+          <div class="field field--full"><label for="c-contact">Preferred contact</label>
+            <select id="c-contact" name="preferred_contact_method">
+              <option value="phone">Phone call</option>
+              <option value="email">Email</option>
+              <option value="in_person">In-person meeting</option>
             </select>
           </div>
           <fieldset class="field field--full">
@@ -870,17 +873,19 @@ consult = f"""<main id="main" style="padding-top:calc(var(--header-h) + env(safe
 {interest_chips}
             </div>
           </fieldset>
-          <div class="field field--full"><label for="c-msg">Anything you’d like us to know <span class="optional">(optional)</span></label><textarea id="c-msg" name="message" data-label="Message" placeholder="Residences, upcoming travel or occasions, as much or as little as you like."></textarea></div>
+          <div class="field field--full"><label for="c-msg">Anything you’d like us to know <span class="optional">(optional)</span></label><textarea id="c-msg" name="message" placeholder="Residences, upcoming travel or occasions, as much or as little as you like."></textarea></div>
+          <div class="field hp-field" aria-hidden="true"><label for="c-website">Leave this field empty</label><input id="c-website" name="website_url" tabindex="-1" autocomplete="off"></div>
         </div>
+        <p class="form-error" role="alert" hidden>We couldn’t send your request just now. Please try again, or email <a href="mailto:{EMAIL}">{EMAIL}</a> or call <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>.</p>
         <div class="form-foot">
-          <small>Submitting opens your email app with your request addressed to {EMAIL}, ready to send.</small>
-          <button class="btn" type="submit">Prepare My Request <span class="arrow" aria-hidden="true">→</span></button>
+          <small>We’ll store and process this information to respond to your request. You may opt out at any time.</small>
+          <button class="btn" type="submit"><span class="btn-label" data-default="Request Consultation">Request Consultation</span> <span class="arrow" aria-hidden="true">→</span></button>
         </div>
       </form>
       <div class="form-success" id="consult-success" tabindex="-1" hidden>
         <span class="eyebrow">MAHALO</span>
-        <h2 style="margin-top:1.25rem;font-size:var(--t-2xl)">Thank you. <em>One last step.</em></h2>
-        <p>Your email app should now be open with your request addressed to {EMAIL}. Please press send to deliver it. If it did not open, email <a href="mailto:{EMAIL}">{EMAIL}</a> or call <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>.</p>
+        <h2 style="margin-top:1.25rem;font-size:var(--t-2xl)">Thank you. <em>Your request is with us.</em></h2>
+        <p>A member of the MAHALO team will contact you personally, in the way you prefer, to arrange a confidential conversation. For anything urgent, please call <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>.</p>
       </div>
     </div>
   </div>
@@ -931,7 +936,7 @@ contact = f"""<main id="main">
         <p class="form-error" role="alert" hidden>We couldn’t send your message just now. Please try again, or email <a href="mailto:{EMAIL}">{EMAIL}</a> or call <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>.</p>
         <div class="form-foot">
           <small>We’ll store and process this information to respond to your inquiry. You may opt out at any time.</small>
-          <button class="btn" type="submit"><span class="btn-label">Send Message</span> <span class="arrow" aria-hidden="true">→</span></button>
+          <button class="btn" type="submit"><span class="btn-label" data-default="Send Message">Send Message</span> <span class="arrow" aria-hidden="true">→</span></button>
         </div>
       </form>
       <div class="form-success" id="contact-success" tabindex="-1" hidden>

@@ -39,16 +39,23 @@ Then open http://localhost:8133.
 
 ## Forms
 
-**Contact page** — the site's own form, sent to HubSpot through HubSpot's Forms
-API (portal 247943745, form `04888fa2-5032-4e24-8c97-db61eaa0708c`), so
-submissions, contacts and notifications appear in HubSpot as usual.
+Both forms use the site's own design and submit to HubSpot (portal 247943745)
+through HubSpot's Forms API, so submissions, contacts and notifications appear in
+HubSpot as usual.
 
-- The HubSpot form must have **reCAPTCHA turned off** (HubSpot rejects API
+| Page | HubSpot form |
+|---|---|
+| Contact | `04888fa2-5032-4e24-8c97-db61eaa0708c` |
+| Private consultation | `c8c878c2-7aea-4b94-8a8f-585ebe8103b0` |
+
+- Both HubSpot forms must have **reCAPTCHA turned off** (HubSpot rejects API
   submissions from forms with captcha). Spam is filtered on the site instead by a
   hidden trap field and a minimum time on the page (`assets/main.js`).
-- Field `name` attributes must match the HubSpot form's internal property names:
-  `firstname`, `lastname`, `email`, `phone`, `message`. If you add a field in
-  HubSpot, add a matching input in `tools/build_site.py`.
-
-**Consultation page** — opens the visitor's email app with a message to
-info@mahalosecurity.com already written. It can be moved to HubSpot the same way.
+- Each input's `name` must match the HubSpot property's internal name, and select
+  and checkbox `value`s must match HubSpot's internal option values. Current
+  mapping: `firstname`, `lastname`, `email`, `phone`, `company`, `message`,
+  `consultation_is_for`, `preferred_contact_method` (`phone`, `email`,
+  `in_person`) and `areas_of_interest` (the five service names; several ticked
+  boxes are sent as one value separated by `;`).
+- If you add or rename a field or option in HubSpot, update the matching input in
+  `tools/build_site.py` and rebuild.

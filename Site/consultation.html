@@ -22,7 +22,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Jost:wght@300..600&display=swap">
-<link rel="stylesheet" href="assets/styles.css?v=14">
+<link rel="stylesheet" href="assets/styles.css?v=15">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.mahalosecurity.com/"}, {"@type": "ListItem", "position": 2, "name": "Private Consultation", "item": "https://www.mahalosecurity.com/consultation.html"}]}</script>
 </head>
 <body class="">
@@ -62,14 +62,16 @@
     </div>
 
     <div class="form">
-      <form id="consult-form" data-mahalo-form data-success="consult-success" data-subject="Private consultation request" novalidate>
+      <!-- Submissions go to HubSpot form c8c878c2-7aea-4b94-8a8f-585ebe8103b0 (portal 247943745). Field names and option values match HubSpot's internal values. -->
+      <form id="consult-form" data-hubspot-portal="247943745" data-hubspot-form="c8c878c2-7aea-4b94-8a8f-585ebe8103b0" data-success="consult-success" novalidate>
         <div class="form-grid">
-          <div class="field"><label for="c-name">Full name</label><input id="c-name" name="name" data-label="Name" autocomplete="name" required></div>
-          <div class="field"><label for="c-org">Organization <span class="optional">(optional)</span></label><input id="c-org" name="organization" data-label="Organization" autocomplete="organization"></div>
-          <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" data-label="Email" type="email" autocomplete="email" required></div>
-          <div class="field"><label for="c-phone">Phone <span class="optional">(optional)</span></label><input id="c-phone" name="phone" data-label="Phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="c-first">First name</label><input id="c-first" name="firstname" autocomplete="given-name" required></div>
+          <div class="field"><label for="c-last">Last name</label><input id="c-last" name="lastname" autocomplete="family-name" required></div>
+          <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="c-phone">Phone <span class="optional">(optional)</span></label><input id="c-phone" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="field"><label for="c-org">Organization <span class="optional">(optional)</span></label><input id="c-org" name="company" autocomplete="organization"></div>
           <div class="field"><label for="c-for">Consultation is for</label>
-            <select id="c-for" name="for" data-label="Consultation is for" required>
+            <select id="c-for" name="consultation_is_for" required>
               <option value="">Select one</option>
               <option>Myself</option>
               <option>My family</option>
@@ -79,34 +81,36 @@
               <option>An event or gathering</option>
             </select>
           </div>
-          <div class="field"><label for="c-contact">Preferred contact</label>
-            <select id="c-contact" name="contact" data-label="Preferred contact">
-              <option>Phone call</option>
-              <option>Email</option>
-              <option>In-person meeting</option>
+          <div class="field field--full"><label for="c-contact">Preferred contact</label>
+            <select id="c-contact" name="preferred_contact_method">
+              <option value="phone">Phone call</option>
+              <option value="email">Email</option>
+              <option value="in_person">In-person meeting</option>
             </select>
           </div>
           <fieldset class="field field--full">
             <legend>Areas of interest <span class="optional">(select any)</span></legend>
             <div class="chips">
-            <label class="chip"><input type="checkbox" name="interest" id="int-estate" value="The Private Estate" data-label="Interest"><span>The Private Estate</span></label>
-            <label class="chip"><input type="checkbox" name="interest" id="int-executive" value="The Executive Life" data-label="Interest"><span>The Executive Life</span></label>
-            <label class="chip"><input type="checkbox" name="interest" id="int-hospitality" value="The World of Hospitality" data-label="Interest"><span>The World of Hospitality</span></label>
-            <label class="chip"><input type="checkbox" name="interest" id="int-journey" value="The Private Journey" data-label="Interest"><span>The Private Journey</span></label>
-            <label class="chip"><input type="checkbox" name="interest" id="int-entertaining" value="The Art of Entertaining" data-label="Interest"><span>The Art of Entertaining</span></label>
+            <label class="chip"><input type="checkbox" name="areas_of_interest" id="int-estate" value="The Private Estate"><span>The Private Estate</span></label>
+            <label class="chip"><input type="checkbox" name="areas_of_interest" id="int-executive" value="The Executive Life"><span>The Executive Life</span></label>
+            <label class="chip"><input type="checkbox" name="areas_of_interest" id="int-hospitality" value="The World of Hospitality"><span>The World of Hospitality</span></label>
+            <label class="chip"><input type="checkbox" name="areas_of_interest" id="int-journey" value="The Private Journey"><span>The Private Journey</span></label>
+            <label class="chip"><input type="checkbox" name="areas_of_interest" id="int-entertaining" value="The Art of Entertaining"><span>The Art of Entertaining</span></label>
             </div>
           </fieldset>
-          <div class="field field--full"><label for="c-msg">Anything you’d like us to know <span class="optional">(optional)</span></label><textarea id="c-msg" name="message" data-label="Message" placeholder="Residences, upcoming travel or occasions, as much or as little as you like."></textarea></div>
+          <div class="field field--full"><label for="c-msg">Anything you’d like us to know <span class="optional">(optional)</span></label><textarea id="c-msg" name="message" placeholder="Residences, upcoming travel or occasions, as much or as little as you like."></textarea></div>
+          <div class="field hp-field" aria-hidden="true"><label for="c-website">Leave this field empty</label><input id="c-website" name="website_url" tabindex="-1" autocomplete="off"></div>
         </div>
+        <p class="form-error" role="alert" hidden>We couldn’t send your request just now. Please try again, or email <a href="mailto:info@mahalosecurity.com">info@mahalosecurity.com</a> or call <a href="tel:+17274006259">727-400-6259</a>.</p>
         <div class="form-foot">
-          <small>Submitting opens your email app with your request addressed to info@mahalosecurity.com, ready to send.</small>
-          <button class="btn" type="submit">Prepare My Request <span class="arrow" aria-hidden="true">→</span></button>
+          <small>We’ll store and process this information to respond to your request. You may opt out at any time.</small>
+          <button class="btn" type="submit"><span class="btn-label" data-default="Request Consultation">Request Consultation</span> <span class="arrow" aria-hidden="true">→</span></button>
         </div>
       </form>
       <div class="form-success" id="consult-success" tabindex="-1" hidden>
         <span class="eyebrow">MAHALO</span>
-        <h2 style="margin-top:1.25rem;font-size:var(--t-2xl)">Thank you. <em>One last step.</em></h2>
-        <p>Your email app should now be open with your request addressed to info@mahalosecurity.com. Please press send to deliver it. If it did not open, email <a href="mailto:info@mahalosecurity.com">info@mahalosecurity.com</a> or call <a href="tel:+17274006259">727-400-6259</a>.</p>
+        <h2 style="margin-top:1.25rem;font-size:var(--t-2xl)">Thank you. <em>Your request is with us.</em></h2>
+        <p>A member of the MAHALO team will contact you personally, in the way you prefer, to arrange a confidential conversation. For anything urgent, please call <a href="tel:+17274006259">727-400-6259</a>.</p>
       </div>
     </div>
   </div>
@@ -158,6 +162,6 @@
     </div>
   </div>
 </footer>
-<script src="assets/main.js?v=14"></script>
+<script src="assets/main.js?v=15"></script>
 </body>
 </html>
