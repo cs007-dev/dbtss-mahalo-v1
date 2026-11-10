@@ -278,7 +278,12 @@ def esc(s):
 
 
 def page_url(fname):
-    return SITE + "/" if fname == "index.html" else f"{SITE}/{fname}"
+    """Public address of a page. Netlify serves about.html at /about, so canonical
+    URLs, the sitemap and structured data use the clean form; internal links keep
+    .html so the local preview works."""
+    if fname == "index.html":
+        return SITE + "/"
+    return f"{SITE}/{fname[:-5] if fname.endswith('.html') else fname}"
 
 
 # ---------------------------------------------------------------- structured data

@@ -6,10 +6,8 @@
   publish = "Site"
   command = ""
 
-# Serve the pages exactly as built. Netlify's "pretty URLs" post-processing
-# rewrites links to /about while canonical URLs and the sitemap use about.html.
-[build.processing]
-  skip_processing = true
+# Netlify serves about.html at /about and rewrites internal links to that
+# clean form; canonical URLs and the sitemap use the same clean addresses.
 
 # Security headers for every page
 [[headers]]
